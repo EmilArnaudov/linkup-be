@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node  -r tsconfig-paths/register dist/index.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "keywords": [],
   "author": "",

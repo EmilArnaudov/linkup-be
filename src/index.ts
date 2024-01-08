@@ -4,12 +4,14 @@ import dotenv from 'dotenv';
 import router from './routes';
 import { AppDataSource } from './data-source';
 import 'reflect-metadata';
+import { User } from './entities/User.entity';
 
 //For env File
 dotenv.config();
 
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
+    // AppDataSource.synchronize();
     const app: Application = express();
     const port = process.env.PORT || 8000;
 
