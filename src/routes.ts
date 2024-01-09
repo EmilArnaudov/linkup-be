@@ -1,14 +1,14 @@
-import { Router } from "express";
-import MainController from "./controllers/MainController";
-import GamesController from "./controllers/GamesController";
+import { Router } from 'express';
+import GamesController from './controllers/GamesController';
+import AuthController from './controllers/AuthController';
 
 const router = Router();
 
-router.use('/', MainController);
-router.use('/games', GamesController)
+router.use('/auth', AuthController);
+router.use('/games', GamesController);
 
 router.all('/*', (req, res) => {
-  res.status(404)
-})
+  res.status(404);
+});
 
 export default router;
