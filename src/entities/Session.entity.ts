@@ -26,7 +26,7 @@ export class Session {
   maxPlayers: number;
 
   @Column()
-  game: number;
+  gameId: number;
 
   @Column()
   start: number;

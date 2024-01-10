@@ -18,7 +18,7 @@ export class User {
   @Column()
   isActive: boolean;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   // One User can have many Sessions
