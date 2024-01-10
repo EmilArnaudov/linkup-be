@@ -18,12 +18,11 @@ AuthController.post('/login', async (req: Request, res: Response) => {
     }
     user.isActive = true;
     const token = generateToken({ userId: user.id });
+    const { password: _, ...userDetails } = user;
     res.status(200).json({
       tokenType: 'Bearer',
       accessToken: token,
-      userDetails: {
-        ...user,
-      },
+      userDetails,
     });
 
     userRepository.save(user);
@@ -48,9 +47,16 @@ AuthController.post('/register', async (req: Request, res: Response) => {
     const user = new User();
     user.username = username;
     user.password = hashedPassword;
-    user.isActive = false;
-    userRepository.save(user);
-    res.status(200).send('User created successfully');
+    user.isActive = true;
+    const savedUser = await userRepository.save(user);
+    const token = generateToken({ userId: savedUser.id });
+    const { password: _, ...userDetails } = savedUser;
+
+    res.status(200).json({
+      tokenType: 'Bearer',
+      accessToken: token,
+      userDetails,
+    });
   } catch (error) {
     res.status(400).json({ error: 'User creation failed' });
   }
