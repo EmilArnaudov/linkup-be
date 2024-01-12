@@ -32,7 +32,33 @@ export async function createSession({
 }
 
 export async function getAllSessions(): Promise<Session[]> {
-  let sessions = await sessionRepository.find({ relations: ['host'] });
+  let sessions = await sessionRepository.find({
+    relations: ['host'],
+    order: { id: 'DESC' },
+  });
   sessions = await Promise.all(sessions.map((s) => loadGameForSession(s)));
   return sessions;
+}
+
+export async function getSessionById(id: number): Promise<Session> {
+  return await loadGameForSession(
+    await sessionRepository.findOneOrFail({
+      where: { id },
+      relations: ['host', 'participants'],
+    }),
+    true
+  );
+}
+
+export async function joinSession(
+  sessionId: number,
+  userId: number
+): Promise<Session> {
+  const user = await userRepository.findOneOrFail({ where: { id: userId } });
+  const session = await sessionRepository.findOneOrFail({
+    where: { id: sessionId },
+    relations: ['host', 'participants'],
+  });
+  session.participants.push(user);
+  return await loadGameForSession(await sessionRepository.save(session), true);
 }

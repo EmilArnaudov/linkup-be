@@ -11,7 +11,6 @@ dotenv.config();
 
 AppDataSource.initialize()
   .then(async () => {
-    // AppDataSource.synchronize();
     const app: Application = express();
     const port = process.env.PORT || 8000;
 
