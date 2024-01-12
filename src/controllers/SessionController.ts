@@ -14,18 +14,14 @@ SessionController.get('/all', async (req: Request, res: Response) => {
 });
 
 SessionController.post('/', async (req: Request, res: Response) => {
-  console.log('I HANDLE THIS REQUEST');
-
   const data = new CreateSessionPropsValidator();
   Object.assign(data, req.body);
 
   const errors = await validate(data);
   if (errors.length > 0) {
-    console.log('IT HAS ERRORS');
     return res.status(400).send(errors);
   } else {
     const session = await createSession(req.body);
-    console.log('ITS GOOD');
     return res.status(200).json(session);
   }
 });

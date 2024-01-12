@@ -42,4 +42,6 @@ export class Session {
   @ManyToMany(() => User, (user) => user.participatingSessions)
   @JoinTable()
   participants: User[];
+
+  game?: any;
 }

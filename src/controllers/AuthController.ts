@@ -11,7 +11,17 @@ const userRepository = AppDataSource.getRepository(User);
 AuthController.post('/login', async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const user = await userRepository.findOne({ where: { username } });
+    const user = await userRepository.findOne({
+      where: { username },
+      select: [
+        'id',
+        'isActive',
+        'participatingSessions',
+        'password',
+        'sessions',
+        'username',
+      ],
+    });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid username or password' });

@@ -1,4 +1,4 @@
-import { create } from "apisauce";
+import { create } from 'apisauce';
 
 // const options = {
 //   method: 'GET',
@@ -14,5 +14,5 @@ import { create } from "apisauce";
 // };
 
 export const api = create({
-  baseURL: 'https://www.freetogame.com/api/games'
-})
+  baseURL: 'https://www.freetogame.com/api',
+});

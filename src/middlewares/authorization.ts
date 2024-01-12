@@ -7,8 +7,12 @@ export const authenticate = (
   next: NextFunction
 ) => {
   try {
+    console.log(req.headers, 'headers');
+
     const token = req.headers.authorization?.split(' ')[1] || '';
     const decoded = verifyToken(token);
+    console.log(token, decoded, 'token, decoded');
+
     (req as any).user = decoded;
     next();
   } catch (error) {
