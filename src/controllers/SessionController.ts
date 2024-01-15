@@ -78,8 +78,12 @@ SessionController.post('/', async (req: Request, res: Response) => {
   if (errors.length > 0) {
     return res.status(400).send(errors);
   } else {
-    const session = await createSession(req.body);
-    return res.status(200).json(session);
+    try {
+      const session = await createSession(req.body);
+      return res.status(200).json(session);
+    } catch (error) {
+      res.status(400).json(error);
+    }
   }
 });
 

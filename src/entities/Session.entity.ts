@@ -6,6 +6,8 @@ import {
   ManyToMany,
   JoinTable,
   AfterLoad,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User.entity';
 
@@ -30,10 +32,10 @@ export class Session {
   gameId: number;
 
   @Column()
-  start: number;
+  start: string;
 
   @Column()
-  end: number;
+  end: string;
 
   // Each Session has one User as a host
   @ManyToOne(() => User, (user) => user.sessions)

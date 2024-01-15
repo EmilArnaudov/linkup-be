@@ -30,16 +30,16 @@ export class CreateSessionTable1704886174790 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'game',
-            type: 'varchar',
+            name: 'gameId',
+            type: 'int',
           },
           {
             name: 'start',
-            type: 'bigint',
+            type: 'datetime',
           },
           {
             name: 'end',
-            type: 'bigint',
+            type: 'datetime',
           },
         ],
       }),

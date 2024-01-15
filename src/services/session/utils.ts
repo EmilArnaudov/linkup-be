@@ -1,13 +1,16 @@
 import { Session } from '@/entities/Session.entity';
 import { getGameById } from '../games/gamesServices';
 import { Game, SessionGame } from '../games/games.types';
+import dayjs from 'dayjs';
 
-export function isSessionLive(
-  startTimestamp: number,
-  endTimestamp: number
-): boolean {
-  const currentTime = Math.floor(Date.now() / 1000);
-  return currentTime >= startTimestamp && currentTime <= endTimestamp;
+export function isSessionLive(start: string, end: string): boolean {
+  const currentMoment = dayjs();
+  const startDate = dayjs(start);
+  const endDate = dayjs(end);
+
+  const isBetween =
+    currentMoment.isAfter(startDate) && currentMoment.isBefore(endDate);
+  return isBetween;
 }
 
 export async function loadGameForSession(

@@ -13,20 +13,11 @@ export class CreateSessionPropsValidator {
   @IsNumber()
   public gameId: number;
 
-  @IsNumber()
-  public start: number;
+  @IsString()
+  public start: string;
 
-  @IsNumber()
-  public end: number;
+  @IsString()
+  public end: string;
 
   // Add more properties and decorators as needed
 }
-
-// interface CreateSessionProps {
-//   title: string;
-//   maxPlayers: number;
-//   game: string;
-//   start: number;
-//   end: number;
-//   hostId: number;
-// }
