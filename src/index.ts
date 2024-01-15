@@ -5,6 +5,7 @@ import router from './routes';
 import { AppDataSource } from './data-source';
 import 'reflect-metadata';
 import { User } from './entities/User.entity';
+import { rescheduleUpcomingSessions } from './services/session/sessionService';
 
 //For env File
 dotenv.config();
@@ -19,6 +20,7 @@ AppDataSource.initialize()
     app.use(cors());
     app.use('/', router);
     app.listen(port, () => {
+      rescheduleUpcomingSessions();
       console.log(`Server is Fire at http://localhost:${port}`);
     });
   })

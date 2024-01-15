@@ -31,11 +31,11 @@ export class Session {
   @Column()
   gameId: number;
 
-  @Column()
-  start: string;
+  @Column({ type: 'datetime' })
+  start: Date;
 
-  @Column()
-  end: string;
+  @Column({ type: 'datetime' })
+  end: Date;
 
   // Each Session has one User as a host
   @ManyToOne(() => User, (user) => user.sessions)
