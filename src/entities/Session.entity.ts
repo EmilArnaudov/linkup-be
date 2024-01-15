@@ -5,6 +5,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  AfterLoad,
 } from 'typeorm';
 import { User } from './User.entity';
 

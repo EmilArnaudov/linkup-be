@@ -60,5 +60,20 @@ export async function joinSession(
     relations: ['host', 'participants'],
   });
   session.participants.push(user);
+  session.currentPlayers += 1;
+  return await loadGameForSession(await sessionRepository.save(session), true);
+}
+
+export async function leaveSession(
+  sessionId: number,
+  userId: number
+): Promise<Session> {
+  const user = await userRepository.findOneOrFail({ where: { id: userId } });
+  const session = await sessionRepository.findOneOrFail({
+    where: { id: sessionId },
+    relations: ['host', 'participants'],
+  });
+  session.participants = session.participants.filter((p) => p.id !== userId);
+  session.currentPlayers -= 1;
   return await loadGameForSession(await sessionRepository.save(session), true);
 }

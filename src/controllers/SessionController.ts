@@ -3,6 +3,7 @@ import {
   getAllSessions,
   getSessionById,
   joinSession,
+  leaveSession,
 } from '@/services/session/sessionService';
 import { CreateSessionPropsValidator } from '@/validators/CreateSessionPropsValidator';
 import { validate } from 'class-validator';
@@ -33,7 +34,7 @@ SessionController.post('/join/:id', async (req: Request, res: Response) => {
   }
 
   if (!req.body.userId) {
-    return res.status(400).json({ error: 'Session ID is missing.' });
+    return res.status(400).json({ error: 'User ID is missing.' });
   }
 
   try {
@@ -41,6 +42,28 @@ SessionController.post('/join/:id', async (req: Request, res: Response) => {
     const userId = Number(req.body.userId);
 
     const session = await joinSession(sessionId, userId);
+    return res.status(200).json(session);
+  } catch (error) {
+    return res.status(500).json({ error: 'Server error, please try again' });
+  }
+});
+
+SessionController.post('/leave/:id', async (req: Request, res: Response) => {
+  console.log('IM HERE');
+
+  if (!req.params.id) {
+    return res.status(400).json({ error: 'Session ID is missing.' });
+  }
+
+  if (!req.body.userId) {
+    return res.status(400).json({ error: 'User ID is missing.' });
+  }
+
+  try {
+    const sessionId = Number(req.params.id);
+    const userId = Number(req.body.userId);
+
+    const session = await leaveSession(sessionId, userId);
     return res.status(200).json(session);
   } catch (error) {
     return res.status(500).json({ error: 'Server error, please try again' });
