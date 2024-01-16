@@ -6,7 +6,7 @@ import { isSessionLive, loadGameForSession } from './utils';
 import schedule from 'node-schedule';
 import { getGameById } from '../games/gamesServices';
 import { Game, SessionGame } from '../games/games.types';
-import { MoreThan } from 'typeorm';
+import { LessThan, MoreThan } from 'typeorm';
 import dayjs from 'dayjs';
 
 const sessionRepository = AppDataSource.getRepository(Session);
@@ -85,9 +85,11 @@ export async function leaveSession(
   return await loadGameForSession(await sessionRepository.save(session), true);
 }
 
-export async function rescheduleUpcomingSessions() {
-  const upcomingSessions = await getUpcomingSessions(); // Get sessions from the database
-  upcomingSessions.forEach(scheduleSessionEvents); // Re-schedule each session
+export async function rescheduleSessions() {
+  const upcomingSessions = await getUpcomingSessions();
+  upcomingSessions.forEach(scheduleSessionEvents);
+  rescheduleUnfinishedSessions();
+  updateEndedSessionsStatus();
 }
 
 export async function getUpcomingSessions() {
@@ -126,4 +128,53 @@ async function updateSessionStatus(id: number, val: boolean) {
   const session = await sessionRepository.findOneOrFail({ where: { id } });
   session.isLive = val;
   await sessionRepository.save(session);
+}
+
+async function rescheduleUnfinishedSessions() {
+  const now = new Date();
+
+  try {
+    // Fetch sessions that have started but not yet ended
+    const unfinishedSessions = await sessionRepository.find({
+      where: {
+        start: LessThan(now),
+        end: MoreThan(now),
+      },
+    });
+
+    // Re-schedule the end event for each unfinished session
+    unfinishedSessions.forEach((session) => {
+      const endTime = new Date(session.end);
+
+      if (endTime > now) {
+        schedule.scheduleJob(endTime, () => {
+          updateSessionStatus(session.id, false);
+        });
+      }
+    });
+  } catch (err) {
+    console.error('Error rescheduling unfinished sessions:', err);
+    throw err;
+  }
+}
+
+async function updateEndedSessionsStatus() {
+  const now = new Date();
+
+  try {
+    const endedSessions = await sessionRepository.find({
+      where: {
+        end: LessThan(now),
+        isLive: true,
+      },
+    });
+
+    // Update the isLive status for each ended session
+    for (const session of endedSessions) {
+      await updateSessionStatus(session.id, false);
+    }
+  } catch (err) {
+    console.error('Error updating ended sessions status:', err);
+    throw err;
+  }
 }
