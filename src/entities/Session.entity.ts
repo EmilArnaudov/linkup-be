@@ -8,8 +8,10 @@ import {
   AfterLoad,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from './User.entity';
+import { Message } from './Message.entity';
 
 @Entity()
 export class Session {
@@ -45,6 +47,9 @@ export class Session {
   @ManyToMany(() => User, (user) => user.participatingSessions)
   @JoinTable()
   participants: User[];
+
+  @OneToMany(() => Message, (message) => message.session)
+  messages: Message[];
 
   game?: any;
 }
