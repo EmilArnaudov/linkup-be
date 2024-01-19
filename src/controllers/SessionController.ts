@@ -6,6 +6,7 @@ import {
   joinSession,
   leaveSession,
 } from '@/services/session/sessionService';
+import { CreateMessageValidator } from '@/validators/CreateMessageValidator';
 import { CreateSessionPropsValidator } from '@/validators/CreateSessionPropsValidator';
 import { validate } from 'class-validator';
 import { Request, Response, Router } from 'express';
@@ -28,35 +29,28 @@ SessionController.get('/:id', async (req: Request, res: Response) => {
 });
 
 SessionController.post('/message/:id', async (req: Request, res: Response) => {
-  // if (!req.params.id) {
-  //   return res.status(400).json({ error: 'Session ID is missing.' });
-  // }
+  const data = new CreateMessageValidator();
+  Object.assign(data, req.body);
 
-  // if (!req.body.userId) {
-  //   return res.status(400).json({ error: 'User ID is missing.' });
-  // }
-  const message = await createMessage({
-    senderId: req.body.senderId,
-    content: req.body.content,
-    sessionId: Number(req.params.id),
-  });
+  const errors = await validate(data);
+  if (errors.length > 0) {
+    return res.status(400).send(errors);
+  }
 
-  return res.status(200).json({ message });
+  try {
+    const message = await createMessage({
+      senderId: req.body.senderId,
+      content: req.body.content,
+      sessionId: Number(req.params.id),
+    });
 
-  // try {
-  //   const sessionId = Number(req.params.id);
-  //   const userId = Number(req.body.userId);
-
-  //   const session = await joinSession(sessionId, userId);
-  //   return res.status(200).json(session);
-  // } catch (error) {
-  //   return res.status(500).json({ error: 'Server error, please try again' });
-  // }
+    return res.status(200).json({ message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Server error, please try again' });
+  }
 });
 
 SessionController.post('/join/:id', async (req: Request, res: Response) => {
-  console.log('IM HERE');
-
   if (!req.params.id) {
     return res.status(400).json({ error: 'Session ID is missing.' });
   }
@@ -77,8 +71,6 @@ SessionController.post('/join/:id', async (req: Request, res: Response) => {
 });
 
 SessionController.post('/leave/:id', async (req: Request, res: Response) => {
-  console.log('IM HERE');
-
   if (!req.params.id) {
     return res.status(400).json({ error: 'Session ID is missing.' });
   }

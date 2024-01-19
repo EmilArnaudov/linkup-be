@@ -18,6 +18,4 @@ export class CreateSessionPropsValidator {
 
   @IsString()
   public end: string;
-
-  // Add more properties and decorators as needed
 }
