@@ -35,13 +35,13 @@ SessionController.post('/message/:id', async (req: Request, res: Response) => {
   // if (!req.body.userId) {
   //   return res.status(400).json({ error: 'User ID is missing.' });
   // }
-  const message = createMessage({
+  const message = await createMessage({
     senderId: req.body.senderId,
     content: req.body.content,
     sessionId: Number(req.params.id),
   });
 
-  return res.status(200).send('Message created successfully');
+  return res.status(200).json({ message });
 
   // try {
   //   const sessionId = Number(req.params.id);

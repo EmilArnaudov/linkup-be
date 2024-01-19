@@ -26,8 +26,12 @@ export async function createMessage({
   message.session = session;
   message.sender = sender;
 
+  const roomName = `SESSION${sessionId}`;
+  console.log(roomName, '<---- MESSAGE WILL BE SENT HERE');
   const savedMessage = await messageRepository.save(message);
-  io.emit('newMessage', {
+  console.log(savedMessage, '<-- message tha will be sent');
+
+  io.to(roomName).emit('newMessage', {
     message: savedMessage,
   });
   return savedMessage;

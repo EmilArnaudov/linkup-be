@@ -34,18 +34,13 @@ AppDataSource.initialize()
     });
 
     io.on('connection', (socket) => {
-      console.log('somethings happening');
-      console.log(socket);
-
-      socket.on('joinSession', ({ sessionId }) => {
+      socket.on('joinSession', (sessionId) => {
         console.log('joined session room with id:', sessionId);
-
         socket.join(String(sessionId));
       });
 
-      socket.on('leaveSession', ({ sessionId }) => {
+      socket.on('leaveSession', (sessionId) => {
         console.log('left session room with id:', sessionId);
-
         socket.leave(String(sessionId));
       });
     });

@@ -51,7 +51,10 @@ export async function getSessionById(id: number): Promise<Session> {
   return await loadGameForSession(
     await sessionRepository.findOneOrFail({
       where: { id },
-      relations: ['host', 'participants', 'messages'],
+      relations: ['host', 'participants', 'messages', 'messages.sender'],
+      order: {
+        messages: { created_at: 'ASC' },
+      },
     }),
     true
   );
