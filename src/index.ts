@@ -26,7 +26,29 @@ AppDataSource.initialize()
       console.log(`Server is Fire at http://localhost:${port}`);
     });
 
-    io = new Server(httpServer);
+    io = new Server(httpServer, {
+      cors: {
+        origin: 'http://localhost:5173',
+        methods: ['GET', 'POST'],
+      },
+    });
+
+    io.on('connection', (socket) => {
+      console.log('somethings happening');
+      console.log(socket);
+
+      socket.on('joinSession', ({ sessionId }) => {
+        console.log('joined session room with id:', sessionId);
+
+        socket.join(String(sessionId));
+      });
+
+      socket.on('leaveSession', ({ sessionId }) => {
+        console.log('left session room with id:', sessionId);
+
+        socket.leave(String(sessionId));
+      });
+    });
   })
   .catch((err) => {
     console.error('Error during Data Source initialization', err);

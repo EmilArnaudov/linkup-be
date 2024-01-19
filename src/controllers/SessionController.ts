@@ -1,3 +1,4 @@
+import { createMessage } from '@/services/chat/chatService';
 import {
   createSession,
   getAllSessions,
@@ -24,6 +25,33 @@ SessionController.get('/:id', async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(401).json({ error });
   }
+});
+
+SessionController.post('/message/:id', async (req: Request, res: Response) => {
+  // if (!req.params.id) {
+  //   return res.status(400).json({ error: 'Session ID is missing.' });
+  // }
+
+  // if (!req.body.userId) {
+  //   return res.status(400).json({ error: 'User ID is missing.' });
+  // }
+  const message = createMessage({
+    senderId: req.body.senderId,
+    content: req.body.content,
+    sessionId: Number(req.params.id),
+  });
+
+  return res.status(200).send('Message created successfully');
+
+  // try {
+  //   const sessionId = Number(req.params.id);
+  //   const userId = Number(req.body.userId);
+
+  //   const session = await joinSession(sessionId, userId);
+  //   return res.status(200).json(session);
+  // } catch (error) {
+  //   return res.status(500).json({ error: 'Server error, please try again' });
+  // }
 });
 
 SessionController.post('/join/:id', async (req: Request, res: Response) => {
